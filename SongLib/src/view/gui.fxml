@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="515.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controller">
+    <children>
+        <HBox layoutX="14.0" layoutY="14.0" prefHeight="487.0" prefWidth="771.0" spacing="20">
+            <VBox prefHeight="487.0" prefWidth="325.0">
+                <Label text="Add/Edit Song Details" />
+                <VBox prefHeight="334.0" prefWidth="325.0" spacing="10">
+                    <HBox spacing="10">
+                        <Label text="Title" />
+                        <TextField fx:id="titleField" promptText="enter title" />
+                    </HBox>
+                    <HBox spacing="10">
+                        <Label text="Artist" />
+                        <TextField fx:id="artistField" promptText="enter artist" />
+                    </HBox>
+                    <HBox spacing="10">
+                        <Label text="Album" />
+                        <TextField fx:id="albumField" promptText="enter album" />
+                    </HBox>
+                    <HBox spacing="10">
+                        <Label text="Year" />
+                        <TextField fx:id="yearField" promptText="enter year" />
+                    </HBox>
+                    <HBox alignment="CENTER_RIGHT" spacing="10">
+                        <Button fx:id="addButton" onAction="#addSong" text="Add" />
+                        <Button fx:id="editButton" text="Edit" />
+                        <Button fx:id="deleteButton" text="Delete" />
+                    </HBox>
+                </VBox>
+                <Label text="Current Song Details" />
+                <VBox prefHeight="100.0" prefWidth="325.0" spacing="15">
+                    <HBox spacing="10">
+                        <Label text="Title" />
+                        <Label fx:id="currentTitleLabel" style="-fx-font-size: 16px;" />
+                    </HBox>
+                    <HBox spacing="10">
+                        <Label text="Artist" />
+                        <Label fx:id="currentArtistLabel" style="-fx-font-size: 16px;" />
+                    </HBox>
+                    <HBox spacing="10">
+                        <Label text="Album" />
+                        <Label fx:id="currentAlbumLabel" style="-fx-font-size: 16px;" />
+                    </HBox>
+                    <HBox spacing="10">
+                        <Label text="Year" />
+                        <Label fx:id="currentYearLabel" style="-fx-font-size: 16px;" />
+                    </HBox>
+                </VBox>
+            </VBox>
+            <VBox prefHeight="487.0" prefWidth="430.0">
+                <Label text="Song List" />
+                <ListView fx:id="songList" prefHeight="434.0" prefWidth="430.0" />
+            </VBox>
+        </HBox>
+    </children>
+</AnchorPane>
