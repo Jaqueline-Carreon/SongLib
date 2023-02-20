@@ -60,6 +60,8 @@ public class Controller implements Initializable {
     private Label currentYearLabel;
     @FXML
     private Label currentTitleLabel;
+    @FXML
+    private HBox aedHBOX;
 
     private List<Song> songList1;
     private SongLibrary songLibrary;
@@ -100,6 +102,8 @@ public class Controller implements Initializable {
 
         // Add action listeners to UI elements
         addButton.setOnAction(e -> addSong());
+        deleteButton.setOnAction(e -> deleteSong());
+        editButton.setOnAction(e -> initalizeEdit());
         songList.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> handleSongSelection());
     }
 
@@ -278,7 +282,12 @@ public class Controller implements Initializable {
     
     
     private void editSong() {
+        int editID = songList.getSelectionModel().getSelectedIndex();
+    	Song editSong = songList1.get(editID);
     	
+    	//Save the old title & artist names
+    	String oldTitle = editSong.getTitle();
+    	String oldArtist = editSong.getArtist();
     	
     	// Grabs the edited text fields 
     	String title = titleField.getText().trim();
@@ -303,6 +312,26 @@ public class Controller implements Initializable {
                 alert.showAndWait();
                 return;
            }
+        
+           // Check if song with same title and artist already exists in the library
+           Boolean titleMatch = title.equalsIgnoreCase(oldTitle);
+           Boolean artistMatch = artist.equalsIgnoreCase(artist);
+           Boolean both = titleMatch && artistMatch;
+
+                      
+           ///checking for same songs & skips the comparison to itself
+        	   for (Song song : songList1) {
+        		   if(both) {
+        			   continue;
+        		   }
+        		   else if (song.getTitle().equalsIgnoreCase(title) && song.getArtist().equalsIgnoreCase(artist)) {
+                   // Song already exists in library
+                   Alert alert = new Alert(Alert.AlertType.ERROR, "This song already exists in the library.", ButtonType.OK);
+                   alert.showAndWait();
+                   return;
+        		   }
+        	   }
+        
     	
          //Passing Error Alerts
          //Confirmation from user that they want to edit the song
@@ -317,9 +346,8 @@ public class Controller implements Initializable {
         
     	
         	 ////removing the song
-        	 int songID = songList.getSelectionModel().getSelectedIndex();
-        	 songList.getItems().remove(songID);
-        	 songList1.remove(songID);
+        	 songList.getItems().remove(editID);
+        	 songList1.remove(editID);
     	
     	
         	 //add updated song
