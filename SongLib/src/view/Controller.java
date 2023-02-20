@@ -130,6 +130,26 @@ public class Controller implements Initializable {
         String artist = artistField.getText().trim();
         String album = albumField.getText().trim();
         String year = yearField.getText().trim();
+        
+          //Checks for no empty title & artist
+        if(artist.isEmpty() && title.isEmpty()) {
+       	 Alert alert = new Alert(Alert.AlertType.ERROR, "Title and Artist textfield cannot be empty.", ButtonType.OK);
+            alert.showAndWait();
+            return;
+       }
+        if(title.isEmpty()) {
+        	 Alert alert = new Alert(Alert.AlertType.ERROR, "Song title textfield cannot be empty.", ButtonType.OK);
+             alert.showAndWait();
+             return;
+        }
+    
+        if(artist.isEmpty()) {
+        	 Alert alert = new Alert(Alert.AlertType.ERROR, "Artist textfield cannot be empty.", ButtonType.OK);
+             alert.showAndWait();
+             return;
+        }
+        
+        
 
         // Check if song with same title and artist already exists in the library
         for (Song song : songList1) {
@@ -140,6 +160,16 @@ public class Controller implements Initializable {
                 return;
             }
         }
+        
+         // After passing the alerts
+        //Confirmation
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Song Addition Alert");
+        alert.setContentText("Do you want to add this song?");
+        	 
+        Optional<ButtonType> result = alert.showAndWait();
+        	 
+        if(result.get() == ButtonType.OK) {
 
         // Add new song to library
         Song newSong = new Song(title, artist, album, year);
@@ -157,7 +187,169 @@ public class Controller implements Initializable {
         
         // Save the updated song list to file using Gson
         songLibrary.save(songList1);
-     }
+        
+        //clearing text field after adding
+    	titleField.clear();
+    	artistField.clear();
+    	albumField.clear();
+    	yearField.clear();
+            
+     }else{
+        return;
+        }
+        
+    }
+    
+    
+        
+    private void deleteSong() {
+    	
+    	//Confirmation from user that they want to delete the song
+       	 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+       	 alert.setTitle("Song Deletion Alert");
+       	 alert.setContentText("Do you want to delete this song?");
+       	 
+       	  Optional<ButtonType> result = alert.showAndWait();
+       	 
+           if(result.get() == ButtonType.OK) {
+       
+    	
+        	   int songID = songList.getSelectionModel().getSelectedIndex();
+        	   songList.getItems().remove(songID);
+    
+    	
+        	   /// Have to delete from songList1
+        	   /////////COME BACK TO AFTER JSON
+        	   songList1.remove(songID);
+        	   songLibrary.save(songList1);
+ 
+        	   ///highlight
+        	   songList.getSelectionModel().selectNext();
+        	   if(songList.getSelectionModel().isEmpty()) {
+        	   songList.getSelectionModel().select(songID - 1);
+    	}
+           }else {
+        	   
+        	   return;
+           }
+    	
+    		
+    }
+    
+    private void initalizeEdit() {
+    	
+    	Button editFinal = new Button("Finalize Edit");
+    	Button editCancel = new Button("Cancel Edit");
+    	
+    	aedHBOX.getChildren().clear();
+    	aedHBOX.getChildren().addAll(editFinal,editCancel);
+    	
+    	//editButton.setText("Finalize Edit");
+    	int songID = songList.getSelectionModel().getSelectedIndex();
+    	Song editSong = songList1.get(songID);
+    	
+    	titleField.setText(editSong.getTitle());
+    	artistField.setText(editSong.getArtist());
+    	albumField.setText(editSong.getAlbum());
+    	yearField.setText(editSong.getYear());
+    	
+    	
+    	/// User cancels edit and buttons return to normal
+    	editCancel.setOnAction(e -> restore());
+    	
+    	//User finalizes finalizes the edit
+    	editFinal.setOnAction(e -> editSong());	
+    	
+    }
+    
+    private void restore() {
+    	
+    	titleField.clear();
+    	artistField.clear();
+    	albumField.clear();
+    	yearField.clear();
+    	
+    	
+    	aedHBOX.getChildren().clear();
+    	aedHBOX.getChildren().addAll(addButton,editButton,deleteButton);	
+    	
+    	
+    }
+    
+    
+    private void editSong() {
+    	
+    	
+    	// Grabs the edited text fields 
+    	String title = titleField.getText().trim();
+        String artist = artistField.getText().trim();
+        String album = albumField.getText().trim();
+        String year = yearField.getText().trim();
+    	
+        ///// If song title or artist name is empty warning
+        if(artist.isEmpty() && title.isEmpty()) {
+          	 Alert alert = new Alert(Alert.AlertType.ERROR, "Title and Artist textfield cannot be empty.", ButtonType.OK);
+               alert.showAndWait();
+               return;
+          }
+           if(title.isEmpty()) {
+           	 Alert alert = new Alert(Alert.AlertType.ERROR, "Song title textfield cannot be empty.", ButtonType.OK);
+                alert.showAndWait();
+                return;
+           }
+       
+           if(artist.isEmpty()) {
+           	 Alert alert = new Alert(Alert.AlertType.ERROR, "Artist textfield cannot be empty.", ButtonType.OK);
+                alert.showAndWait();
+                return;
+           }
+    	
+         //Passing Error Alerts
+         //Confirmation from user that they want to edit the song
+         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+         alert.setTitle("Song Edit Alert");
+         alert.setContentText("Do you want to edit this song?");
+         	 
+         Optional<ButtonType> result = alert.showAndWait();
+         	 
+         if(result.get() == ButtonType.OK) {
+           
+        
+    	
+        	 ////removing the song
+        	 int songID = songList.getSelectionModel().getSelectedIndex();
+        	 songList.getItems().remove(songID);
+        	 songList1.remove(songID);
+    	
+    	
+        	 //add updated song
+        	 Song updated = new Song(title,artist,album,year);
+        	 songList1.add(updated);
+        	 songList1.sort(new compareMethod());
+
+        	 // Update UI
+        	 ObservableList<String> songListViewItems = FXCollections.observableArrayList();
+        	 for (Song song : songList1) {
+        		 songListViewItems.add(song.getTitle() + " - " + song.getArtist());
+        	 }
+        	 songList.setItems(songListViewItems);
+        	 songList.getSelectionModel().select(songList1.indexOf(updated));
+        	 displaySongDetails(updated);
+        	 
+        	 //saving the changes to the library
+             songLibrary.save(songList1);
+        	 
+        	 
+        	 //after updating we move out of the edit phase
+        	 restore();
+        	 
+        	 
+         }else {
+        	 return;
+         }    
+        
+
+    }
     
 }
     
