@@ -60,6 +60,8 @@ public class Controller implements Initializable {
     private Label currentYearLabel;
     @FXML
     private Label currentTitleLabel;
+    @FXML
+    private HBox aedHBOX;
 
     private List<Song> songList1;
     private SongLibrary songLibrary;
@@ -100,6 +102,8 @@ public class Controller implements Initializable {
 
         // Add action listeners to UI elements
         addButton.setOnAction(e -> addSong());
+        deleteButton.setOnAction(e -> deleteSong());
+        editButton.setOnAction(e -> initalizeEdit());
         songList.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> handleSongSelection());
     }
 
