@@ -30,7 +30,7 @@
                         <Label text="Year" />
                         <TextField fx:id="yearField" promptText="enter year" />
                     </HBox>
-                    <HBox alignment="CENTER_RIGHT" spacing="10">
+                    <HBox fx:id="aedHBOX" alignment="CENTER_RIGHT" spacing="10">
                         <Button fx:id="addButton" onAction="#addSong" text="Add" />
                         <Button fx:id="editButton" text="Edit" />
                         <Button fx:id="deleteButton" text="Delete" />
