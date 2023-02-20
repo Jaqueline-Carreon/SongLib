@@ -60,6 +60,8 @@ public class Controller implements Initializable {
     private Label currentYearLabel;
     @FXML
     private Label currentTitleLabel;
+    @FXML
+    private HBox aedHBOX;
 
     private List<Song> songList1;
     private SongLibrary songLibrary;
@@ -100,6 +102,9 @@ public class Controller implements Initializable {
 
         // Add action listeners to UI elements
         addButton.setOnAction(e -> addSong());
+        deleteButton.setOnAction(e -> deleteSong());
+        editButton.setOnAction(e -> initalizeEdit());
+        
         songList.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> handleSongSelection());
     }
 
@@ -244,7 +249,7 @@ public class Controller implements Initializable {
     	aedHBOX.getChildren().clear();
     	aedHBOX.getChildren().addAll(editFinal,editCancel);
     	
-    	//editButton.setText("Finalize Edit");
+    
     	int songID = songList.getSelectionModel().getSelectedIndex();
     	Song editSong = songList1.get(songID);
     	
@@ -302,6 +307,16 @@ public class Controller implements Initializable {
            	 Alert alert = new Alert(Alert.AlertType.ERROR, "Artist textfield cannot be empty.", ButtonType.OK);
                 alert.showAndWait();
                 return;
+           }
+        
+         // Check if song with same title and artist already exists in the library
+           for (Song song : songList1) {
+               if (song.getTitle().equalsIgnoreCase(title) && song.getArtist().equalsIgnoreCase(artist)) {
+                   // Song already exists in library
+                   Alert alert = new Alert(Alert.AlertType.ERROR, "This song already exists in the library.", ButtonType.OK);
+                   alert.showAndWait();
+                   return;
+               }
            }
     	
          //Passing Error Alerts
